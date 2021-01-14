@@ -1,3 +1,4 @@
+FROM alpine:3.11.6
 FROM python:3.8.3-alpine
 
 ADD . /authser
