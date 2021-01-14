@@ -88,7 +88,7 @@ DATABASES = {
         'ENGINE': 'djongo',
         'NAME': 'mongodb',
         "CLIENT":{
-            'host':  "mongo:27017" },
+            'host':  "mongodb+srv://admin:" + "tcet1234" + "@cluster0.2i9fw.mongodb.net/users?retryWrites=true&w=majority" },
         'USER': 'admin',
         'PASSWORD': 'tcet1234',
     }
