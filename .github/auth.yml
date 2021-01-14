@@ -1,0 +1,34 @@
+name: authapp
+
+on:
+  push:
+    branches: master
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+
+      -
+        name: utap auth
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - uses: actions/checkout@v2
+      - run: cd authapp && docker build -t rakesh556575/auth:vers1 .
+      - run: docker push  rakesh556575/auth:vers1
+      - uses: Azure/aks-set-context@v1
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+          cluster-name: UTAP
+          resource-group: DefaultResourceGroup-EUS
+      - uses: Azure/k8s-deploy@v1
+        with:
+          manifests: |
+            manifests/deployment.yaml
+            manifests/service.yaml
+
+
