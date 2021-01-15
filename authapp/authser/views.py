@@ -131,12 +131,12 @@ class Login(APIView):
                              'status': 'success',
                              'message': 'Successfully logged in.',
                               'auth_token': auth_token}
-                     response=HttpResponse("sucess")
-                     response.set_cookie("token",auth_token)
+                     #response=HttpResponse("sucess")
+                     #response.set_cookie("token",auth_token)
 
-                     return response
+                     return Response(responseObject)
           except Exception as e:
-              return HttpResponse("Error {}".format(e))
+              return Response("Error {}".format(e))
 
           return Response("Failure")
 
