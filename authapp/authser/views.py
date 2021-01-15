@@ -26,10 +26,13 @@ def verify(f):
        # if not auth_token:
         auth_token=""
         auth_header = args[1].headers.get('Authorization')
+        print(auth_header)
         if auth_header:
            auth_token = auth_header.split(" ")[1]
-
-           return Response("No Authorization ")
+           if not auth_token:
+              return Response("No Authorization ")
+        else:
+            return Response("No Authorization ")
         if auth_token:
             resp = decode_auth_token(auth_token)
             print(resp)
