@@ -21,14 +21,15 @@ SECRET="rakesh"
 def verify(f):
     def wrapper(*args, **kw):
 
-        auth_token=(args[1].COOKIES.get("token")[2:-1])
-        print((auth_token))
-        if not auth_token:
-            auth_header = args[1].headers.get('Authorization')
-            if auth_header:
-                auth_token = auth_header.split(" ")[1]
+       # auth_token=(args[1].COOKIES.get("token")[2:-1])
+       # print((auth_token))
+       # if not auth_token:
+        auth_token=""
+        auth_header = args[1].headers.get('Authorization')
+        if auth_header:
+           auth_token = auth_header.split(" ")[1]
 
-            return Response("No Authorization ")
+           return Response("No Authorization ")
         if auth_token:
             resp = decode_auth_token(auth_token)
             print(resp)
