@@ -31,5 +31,5 @@ spec:
 
       volumes:
         - name: 'data'
-            persistentVolumeClaim:
+          persistentVolumeClaim:
               claimName: example-pv-claim
