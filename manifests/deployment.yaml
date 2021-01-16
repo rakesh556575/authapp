@@ -6,10 +6,7 @@ metadata:
     app: auth
     env: dev
 spec:
-  volumes:
-    - name: task-pv-storage
-      persistentVolumeClaim:
-        claimName: task-pv-claim
+
   replicas: 2
   selector:
     matchLabels:
@@ -31,3 +28,7 @@ spec:
           volumeMounts:
             - mountPath: "/logs"
               name: task-pv-storage
+      volumes:
+        - name: task-pv-storage
+          persistentVolumeClaim:
+            claimName: task-pv-claim
