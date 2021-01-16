@@ -26,10 +26,10 @@ spec:
               containerPort: 3000
               protocol: TCP
           volumeMounts:
-            - name: 'data'
+            - name: logs
               mountPath: '/logs'
 
       volumes:
-        - name: 'data'
+        - name: logs
           persistentVolumeClaim:
-              claimName: example-pv-claim
+              claimName: azure-managed-disk
