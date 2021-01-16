@@ -26,9 +26,10 @@ spec:
               containerPort: 3000
               protocol: TCP
           volumeMounts:
-            - mountPath: "/logs"
-              name: task-pv-storage
+            - name: 'data'
+              mountPath: '/logs'
+
       volumes:
-        - name: task-pv-storage
-          persistentVolumeClaim:
-            claimName: task-pv-claim
+        - name: 'data'
+            persistentVolumeClaim:
+              claimName: example-pv-claim
