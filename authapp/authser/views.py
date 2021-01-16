@@ -18,6 +18,9 @@ import datetime
 import json
 SECRET="rakesh"
 
+from .logger import get_logger
+logger=get_logger(__name__)
+
 def verify(f):
     def wrapper(*args, **kw):
 
@@ -26,22 +29,24 @@ def verify(f):
        # if not auth_token:
         auth_token=""
         auth_header = args[1].headers.get('Authorization')
-        print(auth_header)
         if auth_header:
            auth_token = auth_header.split(" ")[1]
            if not auth_token:
+              logger.error("No Authorization")
               return Response("No Authorization ")
         else:
+            logger.error("No Authorization")
             return Response("No Authorization ")
         if auth_token:
             resp = decode_auth_token(auth_token)
-            print(resp)
             try:
                 if User.objects.get(name=resp):
                    return f(*args, **kw)
                 else:
+                   logger.error("Not a valid user")
                    return Response("Not valid user")
             except Exception as e:
+                logger.error("Not a valid user")
                 return Response("Not valid user")
 
     return wrapper
@@ -58,17 +63,10 @@ class userview(APIView):
             serializer = UserSerializers(name)
             return Response(serializer.data)
         except Exception as e:
+            logger.error("Error {}".format(e))
             return Response("Error {}".format(e))
 
-    #def post(self,request):
-    #    data = {'name': request.data.get('name'), 'email': request.data.get('email'),"password":request.data.get('password')}
-    #    if User.objects.get(name=data["name"]):
-    #        return Response("user already exists")
-    #    serializer = UserSerializers(data=data)
-    #    if serializer.is_valid():
-    #        serializer.save()
-    #        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    #
 
     def delete(self,request):
         name=request.data.get("name")
@@ -76,6 +74,7 @@ class userview(APIView):
             User.objects.get(name=name).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
+            logger.error("Error {}".format(e))
             return Response("Error {}".format(e))
 
     def put(self,request):
@@ -85,6 +84,7 @@ class userview(APIView):
         serializer = UserSerializers(name_obj,data=request.data,partial=True)
         if serializer.is_valid():
             serializer.save()
+            logger.info("{} user data is scussfully modified".format(name))
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -106,6 +106,7 @@ def encode_auth_token(user_id):
 
         )
     except Exception as e:
+        logger.error("Error encoding auth token {}".format(e))
         return e
 
 
@@ -119,12 +120,16 @@ def decode_auth_token(auth_token):
         payload = jwt.decode(auth_token, SECRET)
         return payload['sub']
     except jwt.ExpiredSignatureError:
+        logger.error("Signature expired. Please log in again")
         return 'Signature expired. Please log in again.'
     except jwt.InvalidTokenError:
+        logger.error("Invalid token. Please log in again")
         return 'Invalid token. Please log in again.'
 
 class Login(APIView):
+
       def get(self,request):
+
           data = {'name': request.data.get('name'), 'email': request.data.get('email'),"password":request.data.get('password')}
 
           try:
@@ -137,9 +142,10 @@ class Login(APIView):
                               'auth_token': auth_token}
                      #response=HttpResponse("sucess")
                      #response.set_cookie("token",auth_token)
-
+                     logger.info("{} user logged in sucessfully".format(request.data.get("name")))
                      return Response(responseObject)
           except Exception as e:
+              logger.error("{} user failed to login".format(request.data.get("name")))
               return Response("Error {}".format(e))
 
           return Response("Failure")
@@ -159,7 +165,9 @@ class Register(APIView):
          serializer = UserSerializers(data=data)
          if serializer.is_valid():
              serializer.save()
+             logger.info("{} user registered sucessfully".format(request.data.get('name')))
              return Response(serializer.data, status=status.HTTP_201_CREATED)
+         logger.error("{} user failed to register".format(request.data.get('name')))
          return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -171,7 +179,9 @@ class Modify(APIView):
         serializer = UserSerializers(name_obj,data=request.data,partial=True)
         if serializer.is_valid():
             serializer.save()
+            logger.info("{} user data is sucessfully modified")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        logger.error("{} user data failed to modifiy")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
