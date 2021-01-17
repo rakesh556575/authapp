@@ -4,7 +4,7 @@ import sys
 import os
 from logging.handlers import TimedRotatingFileHandler
 FORMATTER = logging.Formatter("%(asctime)s — %(name)s — %(levelname)s — %(message)s")
-LOG_FILE = "/logs/auth/auth.log"
+LOG_FILE = "/var/lib/docker/container/auth/auth.log"
 
 def get_console_handler():
    console_handler = logging.StreamHandler(sys.stdout)
