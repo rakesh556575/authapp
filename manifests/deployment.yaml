@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: rakesh556575/auth:vers13
+          image: rakesh556575/auth:vers14
           imagePullPolicy: Always
           ports:
             - name:  http

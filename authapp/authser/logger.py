@@ -4,7 +4,7 @@ import sys
 import os
 from logging.handlers import TimedRotatingFileHandler
 FORMATTER = logging.Formatter("%(asctime)s — %(name)s — %(levelname)s — %(message)s")
-LOG_FILE = "/var/lib/docker/containers/auth/auth.log"
+LOG_FILE = "/log/auth/auth.log"
 
 def get_console_handler():
    console_handler = logging.StreamHandler(sys.stdout)
@@ -15,8 +15,8 @@ def get_file_handler():
    file_handler.setFormatter(FORMATTER)
    return file_handler
 def get_logger(logger_name):
-   if not os.path.exists("/var/lib/docker/containers/auth/"):
-      os.mkdir("/var/lib/docker/containers/auth/")
+   if not os.path.exists("/log/auth/"):
+      os.mkdir("/log/auth/")
    logger = logging.getLogger(logger_name)
    logger.setLevel(logging.DEBUG) # better to have too much log than not enough
    logger.addHandler(get_console_handler())
